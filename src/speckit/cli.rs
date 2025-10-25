@@ -117,7 +117,7 @@ impl SpecKitCli {
 
         // Check if we can run spec-kit via uvx
         Command::new(&self.cli_path)
-            .args(&[
+            .args([
                 "--from",
                 "git+https://github.com/github/spec-kit.git",
                 "specify",
