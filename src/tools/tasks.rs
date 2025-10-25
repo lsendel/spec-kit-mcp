@@ -78,8 +78,8 @@ impl Tool for TasksTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: TasksParams = serde_json::from_value(params)
-            .context("Failed to parse tasks parameters")?;
+        let params: TasksParams =
+            serde_json::from_value(params).context("Failed to parse tasks parameters")?;
 
         tracing::info!(
             plan_file = %params.plan_file.display(),

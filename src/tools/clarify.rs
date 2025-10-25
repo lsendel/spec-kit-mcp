@@ -74,8 +74,8 @@ impl Tool for ClarifyTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: ClarifyParams = serde_json::from_value(params)
-            .context("Failed to parse clarify parameters")?;
+        let params: ClarifyParams =
+            serde_json::from_value(params).context("Failed to parse clarify parameters")?;
 
         tracing::info!(
             spec_file = %params.spec_file.display(),
@@ -190,7 +190,12 @@ mod tests {
         let output_path = dir.path().join("clarify.md");
 
         // Create spec with ambiguities
-        fs::write(&spec_file, "We might add OAuth. Performance should be good.").await.unwrap();
+        fs::write(
+            &spec_file,
+            "We might add OAuth. Performance should be good.",
+        )
+        .await
+        .unwrap();
 
         let params = json!({
             "spec_file": spec_file.to_str().unwrap(),

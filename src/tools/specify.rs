@@ -86,8 +86,8 @@ impl Tool for SpecifyTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: SpecifyParams = serde_json::from_value(params)
-            .context("Failed to parse specify parameters")?;
+        let params: SpecifyParams =
+            serde_json::from_value(params).context("Failed to parse specify parameters")?;
 
         tracing::info!(
             output_path = %params.output_path.display(),
@@ -96,7 +96,10 @@ impl Tool for SpecifyTool {
         );
 
         // Format the specification content
-        let mut content = format!("# Specification\n\n## Requirements\n\n{}\n", params.requirements);
+        let mut content = format!(
+            "# Specification\n\n## Requirements\n\n{}\n",
+            params.requirements
+        );
 
         if let Some(stories) = params.user_stories {
             content.push_str(&format!("\n## User Stories\n\n{}\n", stories));

@@ -78,13 +78,13 @@
 //! }
 //! ```
 
+pub mod config;
 pub mod mcp;
 pub mod speckit;
 pub mod tools;
-pub mod config;
 pub mod utils;
 
 // Re-export main types
 pub use mcp::{McpServer, ProtocolHandler, StdioTransport};
 pub use speckit::{SpecKitCli, SpecKitError};
-pub use tools::{Tool, ToolRegistry, create_registry};
+pub use tools::{create_registry, Tool, ToolRegistry};

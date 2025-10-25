@@ -11,25 +11,25 @@ use std::sync::Arc;
 use crate::mcp::types::{ToolDefinition, ToolResult};
 use crate::speckit::SpecKitCli;
 
-pub mod init;
-pub mod constitution;
-pub mod specify;
-pub mod plan;
-pub mod tasks;
-pub mod implement;
-pub mod clarify;
 pub mod analyze;
 pub mod checklist;
+pub mod clarify;
+pub mod constitution;
+pub mod implement;
+pub mod init;
+pub mod plan;
+pub mod specify;
+pub mod tasks;
 
-pub use init::InitTool;
-pub use constitution::ConstitutionTool;
-pub use specify::SpecifyTool;
-pub use plan::PlanTool;
-pub use tasks::TasksTool;
-pub use implement::ImplementTool;
-pub use clarify::ClarifyTool;
 pub use analyze::AnalyzeTool;
 pub use checklist::ChecklistTool;
+pub use clarify::ClarifyTool;
+pub use constitution::ConstitutionTool;
+pub use implement::ImplementTool;
+pub use init::InitTool;
+pub use plan::PlanTool;
+pub use specify::SpecifyTool;
+pub use tasks::TasksTool;
 
 /// Trait for all MCP tools
 #[async_trait]
@@ -72,10 +72,7 @@ impl ToolRegistry {
 
     /// List all tool definitions
     pub fn list_tools(&self) -> Vec<ToolDefinition> {
-        self.tools
-            .values()
-            .map(|tool| tool.definition())
-            .collect()
+        self.tools.values().map(|tool| tool.definition()).collect()
     }
 
     /// Check if a tool exists
@@ -136,7 +133,6 @@ mod tests {
         let cli = SpecKitCli::new();
         let registry = create_registry(cli);
 
-        assert!(registry.len() > 0);
         assert!(!registry.is_empty());
         assert!(registry.has_tool("speckit_init"));
         assert!(registry.has_tool("speckit_constitution"));
@@ -149,7 +145,7 @@ mod tests {
         let registry = create_registry(cli);
 
         let tools = registry.list_tools();
-        assert!(tools.len() > 0);
+        assert!(!tools.is_empty());
 
         // Verify all tools have proper definitions
         for tool in tools {

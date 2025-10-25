@@ -64,8 +64,8 @@ impl Tool for InitTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: InitParams = serde_json::from_value(params)
-            .context("Failed to parse init parameters")?;
+        let params: InitParams =
+            serde_json::from_value(params).context("Failed to parse init parameters")?;
 
         tracing::info!(
             project_name = %params.project_name,

@@ -72,8 +72,8 @@ impl Tool for ConstitutionTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: ConstitutionParams = serde_json::from_value(params)
-            .context("Failed to parse constitution parameters")?;
+        let params: ConstitutionParams =
+            serde_json::from_value(params).context("Failed to parse constitution parameters")?;
 
         tracing::info!(
             output_path = %params.output_path.display(),
@@ -81,17 +81,17 @@ impl Tool for ConstitutionTool {
         );
 
         // Format the constitution content
-        let mut content = format!("# Project Constitution\n\n## Core Principles\n\n{}\n", params.principles);
+        let mut content = format!(
+            "# Project Constitution\n\n## Core Principles\n\n{}\n",
+            params.principles
+        );
 
         if let Some(constraints) = params.constraints {
             content.push_str(&format!("\n## Technical Constraints\n\n{}\n", constraints));
         }
 
         // Write constitution file
-        let result = self
-            .cli
-            .constitution(&content, &params.output_path)
-            .await?;
+        let result = self.cli.constitution(&content, &params.output_path).await?;
 
         if !result.is_success() {
             return Ok(ToolResult {

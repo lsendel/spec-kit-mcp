@@ -72,8 +72,8 @@ impl Tool for PlanTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: PlanParams = serde_json::from_value(params)
-            .context("Failed to parse plan parameters")?;
+        let params: PlanParams =
+            serde_json::from_value(params).context("Failed to parse plan parameters")?;
 
         tracing::info!(
             spec_file = %params.spec_file.display(),

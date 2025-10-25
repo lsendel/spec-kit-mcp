@@ -107,10 +107,7 @@ pub enum ContentBlock {
     Text { text: String },
 
     #[serde(rename = "image")]
-    Image {
-        data: String,
-        mime_type: String,
-    },
+    Image { data: String, mime_type: String },
 
     #[serde(rename = "resource")]
     Resource {
@@ -123,9 +120,7 @@ pub enum ContentBlock {
 impl ContentBlock {
     /// Create a text content block
     pub fn text(text: impl Into<String>) -> Self {
-        Self::Text {
-            text: text.into()
-        }
+        Self::Text { text: text.into() }
     }
 }
 
@@ -234,10 +229,7 @@ mod tests {
 
     #[test]
     fn test_success_response() {
-        let response = JsonRpcResponse::success(
-            RequestId::Number(1),
-            json!({"status": "ok"}),
-        );
+        let response = JsonRpcResponse::success(RequestId::Number(1), json!({"status": "ok"}));
 
         assert_eq!(response.jsonrpc, "2.0");
         assert_eq!(response.id, RequestId::Number(1));

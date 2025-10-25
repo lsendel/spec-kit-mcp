@@ -73,8 +73,8 @@ impl Tool for ImplementTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: ImplementParams = serde_json::from_value(params)
-            .context("Failed to parse implement parameters")?;
+        let params: ImplementParams =
+            serde_json::from_value(params).context("Failed to parse implement parameters")?;
 
         tracing::info!(
             task_file = %params.task_file.display(),
@@ -103,7 +103,11 @@ impl Tool for ImplementTool {
             Output directory: {}\n\n\
             Next step: Begin implementing the first task",
             params.task_file.display(),
-            tasks_content.lines().take(10).collect::<Vec<_>>().join("\n"),
+            tasks_content
+                .lines()
+                .take(10)
+                .collect::<Vec<_>>()
+                .join("\n"),
             params.context.as_deref().unwrap_or("None provided"),
             params.output_dir.display()
         );
@@ -140,7 +144,9 @@ mod tests {
         let task_file = dir.path().join("tasks.md");
 
         // Create dummy task file
-        fs::write(&task_file, "Task 1: Implement feature\nTask 2: Write tests").await.unwrap();
+        fs::write(&task_file, "Task 1: Implement feature\nTask 2: Write tests")
+            .await
+            .unwrap();
 
         let params = json!({
             "task_file": task_file.to_str().unwrap(),

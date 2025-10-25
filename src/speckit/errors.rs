@@ -36,7 +36,11 @@ pub enum SpecKitError {
 
 impl SpecKitError {
     /// Create a command failed error
-    pub fn command_failed(command: impl Into<String>, stderr: impl Into<String>, exit_code: i32) -> Self {
+    pub fn command_failed(
+        command: impl Into<String>,
+        stderr: impl Into<String>,
+        exit_code: i32,
+    ) -> Self {
         Self::CommandFailed {
             command: command.into(),
             stderr: stderr.into(),

@@ -87,8 +87,8 @@ impl Tool for AnalyzeTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: AnalyzeParams = serde_json::from_value(params)
-            .context("Failed to parse analyze parameters")?;
+        let params: AnalyzeParams =
+            serde_json::from_value(params).context("Failed to parse analyze parameters")?;
 
         tracing::info!(
             project_path = %params.project_path.display(),
@@ -134,16 +134,19 @@ impl Tool for AnalyzeTool {
 
             // Check for keywords mentioned in spec but missing in plan
             if contents.len() >= 2 {
-                let spec_content = contents.iter()
+                let spec_content = contents
+                    .iter()
                     .find(|(n, _)| n.contains("Spec"))
                     .map(|(_, c)| c);
-                let plan_content = contents.iter()
+                let plan_content = contents
+                    .iter()
                     .find(|(n, _)| n.contains("Plan"))
                     .map(|(_, c)| c);
 
                 if let (Some(spec), Some(plan)) = (spec_content, plan_content) {
                     // Extract key terms from spec
-                    let important_terms = spec.split_whitespace()
+                    let important_terms = spec
+                        .split_whitespace()
                         .filter(|w| w.len() > 5 && w.chars().next().unwrap().is_uppercase())
                         .take(10)
                         .collect::<Vec<_>>();
@@ -171,7 +174,10 @@ impl Tool for AnalyzeTool {
         if params.check_coverage {
             analysis.push_str("\n## Coverage Analysis\n\n");
 
-            if found_artifacts.iter().any(|(n, _)| n.contains("Specification")) {
+            if found_artifacts
+                .iter()
+                .any(|(n, _)| n.contains("Specification"))
+            {
                 analysis.push_str("✓ Requirements are specified\n");
             } else {
                 analysis.push_str("✗ Missing specification\n");
@@ -251,8 +257,12 @@ mod tests {
         let dir = tempdir().unwrap();
 
         // Create some artifacts
-        fs::write(dir.path().join("speckit.constitution"), "Principles").await.unwrap();
-        fs::write(dir.path().join("speckit.specify"), "Requirements").await.unwrap();
+        fs::write(dir.path().join("speckit.constitution"), "Principles")
+            .await
+            .unwrap();
+        fs::write(dir.path().join("speckit.specify"), "Requirements")
+            .await
+            .unwrap();
 
         let params = json!({
             "project_path": dir.path().to_str().unwrap(),

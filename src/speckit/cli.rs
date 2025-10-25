@@ -34,7 +34,11 @@ impl CommandResult {
         if self.is_success() {
             format!("Success\n{}", self.stdout.trim())
         } else {
-            format!("Failed (exit code {})\n{}", self.exit_code, self.stderr.trim())
+            format!(
+                "Failed (exit code {})\n{}",
+                self.exit_code,
+                self.stderr.trim()
+            )
         }
     }
 }
@@ -156,9 +160,9 @@ impl SpecKitCli {
 
     /// Initialize a new spec-kit project
     pub async fn init(&self, project_name: &str, path: &Path) -> Result<CommandResult> {
-        let path_str = path.to_str().ok_or_else(|| {
-            SpecKitError::InvalidPath("Path contains invalid UTF-8".to_string())
-        })?;
+        let path_str = path
+            .to_str()
+            .ok_or_else(|| SpecKitError::InvalidPath("Path contains invalid UTF-8".to_string()))?;
 
         let result = self
             .execute_command(&["init", project_name, "--path", path_str])
@@ -177,11 +181,7 @@ impl SpecKitCli {
     }
 
     /// Create a constitution file
-    pub async fn constitution(
-        &self,
-        content: &str,
-        output_path: &Path,
-    ) -> Result<CommandResult> {
+    pub async fn constitution(&self, content: &str, output_path: &Path) -> Result<CommandResult> {
         // For now, we'll write directly to the file since spec-kit
         // accepts input via stdin or prompts
         tokio::fs::write(output_path, content)
@@ -216,11 +216,7 @@ impl SpecKitCli {
     }
 
     /// Create a technical plan
-    pub async fn plan(
-        &self,
-        spec_file: &Path,
-        output_path: &Path,
-    ) -> Result<CommandResult> {
+    pub async fn plan(&self, spec_file: &Path, output_path: &Path) -> Result<CommandResult> {
         let spec_str = spec_file.to_str().ok_or_else(|| {
             SpecKitError::InvalidPath("Spec file path contains invalid UTF-8".to_string())
         })?;
@@ -246,11 +242,7 @@ impl SpecKitCli {
     }
 
     /// Generate task list
-    pub async fn tasks(
-        &self,
-        plan_file: &Path,
-        output_path: &Path,
-    ) -> Result<CommandResult> {
+    pub async fn tasks(&self, plan_file: &Path, output_path: &Path) -> Result<CommandResult> {
         let plan_str = plan_file.to_str().ok_or_else(|| {
             SpecKitError::InvalidPath("Plan file path contains invalid UTF-8".to_string())
         })?;

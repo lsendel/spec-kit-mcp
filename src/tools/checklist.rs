@@ -87,8 +87,8 @@ impl Tool for ChecklistTool {
     }
 
     async fn execute(&self, params: Value) -> Result<ToolResult> {
-        let params: ChecklistParams = serde_json::from_value(params)
-            .context("Failed to parse checklist parameters")?;
+        let params: ChecklistParams =
+            serde_json::from_value(params).context("Failed to parse checklist parameters")?;
 
         tracing::info!(
             spec_file = %params.spec_file.display(),
@@ -110,13 +110,16 @@ impl Tool for ChecklistTool {
         // Extract requirements (simple heuristic)
         let mut req_count = 0;
         for line in spec_content.lines() {
-            if line.trim().starts_with('-') ||
-               line.trim().starts_with('*') ||
-               line.contains("shall") ||
-               line.contains("must") ||
-               line.contains("should") {
+            if line.trim().starts_with('-')
+                || line.trim().starts_with('*')
+                || line.contains("shall")
+                || line.contains("must")
+                || line.contains("should")
+            {
                 req_count += 1;
-                let requirement = line.trim().trim_start_matches('-')
+                let requirement = line
+                    .trim()
+                    .trim_start_matches('-')
                     .trim_start_matches('*')
                     .trim();
                 if !requirement.is_empty() && requirement.len() < 100 {
@@ -224,7 +227,12 @@ mod tests {
         let output_path = dir.path().join("checklist.md");
 
         // Create spec with requirements
-        fs::write(&spec_file, "- User must login\n- System shall validate input\n- Should handle errors").await.unwrap();
+        fs::write(
+            &spec_file,
+            "- User must login\n- System shall validate input\n- Should handle errors",
+        )
+        .await
+        .unwrap();
 
         let params = json!({
             "spec_file": spec_file.to_str().unwrap(),

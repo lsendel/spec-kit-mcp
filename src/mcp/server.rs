@@ -62,9 +62,7 @@ impl McpServer {
     async fn handle_request(&self, request: JsonRpcRequest) -> super::types::JsonRpcResponse {
         // Validate request
         if let Err(e) = self.protocol.validate_request(&request) {
-            return self
-                .protocol
-                .create_error_response(request.id, e);
+            return self.protocol.create_error_response(request.id, e);
         }
 
         // Route to appropriate handler
@@ -79,7 +77,10 @@ impl McpServer {
             }
 
             "tools/call" => {
-                match self.handle_tool_call(request.id.clone(), request.params).await {
+                match self
+                    .handle_tool_call(request.id.clone(), request.params)
+                    .await
+                {
                     Ok(response) => response,
                     Err(e) => self.protocol.create_error_response(request.id, e),
                 }
