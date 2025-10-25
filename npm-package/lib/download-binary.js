@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const { createHash } = require('crypto');
 
-const GITHUB_REPO = 'yourusername/spec-kit-mcp';
+const GITHUB_REPO = 'lsendel/spec-kit-mcp';
 const VERSION = require('../package.json').version;
 
 // Platform-specific binary information
@@ -20,18 +20,21 @@ function getPlatformInfo() {
   const platform = process.platform;
   const arch = process.arch;
 
-  let target;
+  let archiveName;
   let binaryName = 'spec-kit-mcp';
 
   if (platform === 'darwin') {
     if (arch === 'arm64') {
-      target = 'aarch64-apple-darwin';
+      archiveName = 'darwin-arm64';
+    } else if (arch === 'x64') {
+      archiveName = 'darwin-x64';
     } else {
-      target = 'x86_64-apple-darwin';
+      console.warn(`Unsupported macOS architecture: ${arch}`);
+      return null;
     }
   } else if (platform === 'linux') {
     if (arch === 'x64') {
-      target = 'x86_64-unknown-linux-gnu';
+      archiveName = 'linux-x64';
     } else {
       console.warn(`Unsupported Linux architecture: ${arch}`);
       return null;
@@ -39,7 +42,7 @@ function getPlatformInfo() {
   } else if (platform === 'win32') {
     binaryName = 'spec-kit-mcp.exe';
     if (arch === 'x64') {
-      target = 'x86_64-pc-windows-msvc';
+      archiveName = 'win32-x64';
     } else {
       console.warn(`Unsupported Windows architecture: ${arch}`);
       return null;
@@ -49,7 +52,7 @@ function getPlatformInfo() {
     return null;
   }
 
-  return { target, binaryName };
+  return { archiveName, binaryName };
 }
 
 // Download file from URL
@@ -91,6 +94,19 @@ function downloadFile(url, dest) {
   });
 }
 
+// Extract tar.gz archive
+async function extractTarGz(archivePath, destDir) {
+  const { exec } = require('child_process');
+  const { promisify } = require('util');
+  const execAsync = promisify(exec);
+
+  try {
+    await execAsync(`tar -xzf "${archivePath}" -C "${destDir}"`);
+  } catch (error) {
+    throw new Error(`Failed to extract archive: ${error.message}`);
+  }
+}
+
 // Main installation logic
 async function install() {
   console.log('Installing spec-kit-mcp binary...');
@@ -100,13 +116,13 @@ async function install() {
   if (!platformInfo) {
     console.warn('No pre-built binary available for your platform.');
     console.warn('You will need to build from source:');
-    console.warn('  git clone https://github.com/yourusername/spec-kit-mcp.git');
+    console.warn('  git clone https://github.com/lsendel/spec-kit-mcp.git');
     console.warn('  cd spec-kit-mcp');
     console.warn('  cargo build --release');
     return;
   }
 
-  const { target, binaryName } = platformInfo;
+  const { archiveName, binaryName } = platformInfo;
 
   // Create bin directory
   const binDir = path.join(__dirname, '..', 'bin');
@@ -122,31 +138,48 @@ async function install() {
     return;
   }
 
-  // Construct download URL
-  const url = `https://github.com/${GITHUB_REPO}/releases/download/v${VERSION}/spec-kit-mcp-${target}${binaryName.endsWith('.exe') ? '.exe' : ''}`;
+  // Construct download URL for tar.gz archive
+  const archiveFilename = `spec-kit-mcp-${archiveName}.tar.gz`;
+  const url = `https://github.com/${GITHUB_REPO}/releases/download/v${VERSION}/${archiveFilename}`;
+  const archivePath = path.join(binDir, archiveFilename);
 
   console.log(`Downloading from: ${url}`);
 
   try {
-    await downloadFile(url, binaryPath);
+    // Download the archive
+    await downloadFile(url, archivePath);
+    console.log('✓ Archive downloaded');
+
+    // Extract the archive
+    console.log('Extracting archive...');
+    await extractTarGz(archivePath, binDir);
+
+    // Remove the archive
+    fs.unlinkSync(archivePath);
 
     // Make executable on Unix-like systems
-    if (process.platform !== 'win32') {
+    if (process.platform !== 'win32' && fs.existsSync(binaryPath)) {
       fs.chmodSync(binaryPath, 0o755);
     }
 
-    console.log('✓ Binary downloaded and installed successfully!');
+    // Verify binary exists
+    if (!fs.existsSync(binaryPath)) {
+      throw new Error('Binary not found after extraction');
+    }
+
+    console.log('✓ Binary installed successfully!');
     console.log(`  Location: ${binaryPath}`);
   } catch (error) {
-    console.error('Failed to download binary:', error.message);
-    console.error('\nYou can build from source instead:');
-    console.error('  git clone https://github.com/yourusername/spec-kit-mcp.git');
+    console.error('Failed to install binary:', error.message);
+    console.error('\nYou can install using cargo instead:');
+    console.error('  cargo install spec-kit-mcp');
+    console.error('\nOr build from source:');
+    console.error('  git clone https://github.com/lsendel/spec-kit-mcp.git');
     console.error('  cd spec-kit-mcp');
     console.error('  cargo build --release');
-    console.error('  cargo install --path .');
 
     // Don't fail the installation, just warn
-    // Users can still build from source
+    // Users can still use cargo install
   }
 }
 

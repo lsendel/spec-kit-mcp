@@ -21,22 +21,36 @@
 
 ### Installation
 
-#### Via NPX (Recommended)
+#### Via Cargo (Recommended)
 
-Zero installation, always latest version:
-
-```bash
-# Just add to your .mcp.json (see Configuration below)
-npx @speckit/mcp@latest
-```
-
-#### Via Cargo
-
-For Rust developers or offline use:
+Fast, reliable, works offline:
 
 ```bash
 cargo install spec-kit-mcp
 ```
+
+**Advantages:**
+- ✅ Fastest startup
+- ✅ Works offline
+- ✅ Most reliable
+- ✅ Full platform support (macOS Intel/ARM, Linux)
+
+#### Via npm/npx
+
+For Node.js users:
+
+```bash
+# Global installation
+npm install -g @lsendel/spec-kit-mcp
+
+# Or use with npx (downloads on first use)
+npx @lsendel/spec-kit-mcp
+```
+
+**Advantages:**
+- ✅ Familiar for Node.js users
+- ✅ Auto-downloads prebuilt binaries
+- ✅ npx always uses latest version
 
 ### Prerequisites
 
@@ -48,35 +62,10 @@ cargo install spec-kit-mcp
 
 Claude Code supports two ways to configure MCP servers:
 
-#### Method 1: Using npx (Recommended - No Installation Needed)
+#### Method 1: Using Cargo Binary (Recommended)
 
-Create or edit `~/.config/claude-code/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "spec-kit": {
-      "command": "npx",
-      "args": ["-y", "@lsendel/spec-kit-mcp"],
-      "env": {}
-    }
-  }
-}
-```
-
-**Advantages:**
-- ✅ No installation required
-- ✅ Always uses latest version
-- ✅ Works immediately after config
-
-#### Method 2: Using Installed Binary
-
-First install the package:
+First install via cargo:
 ```bash
-# Via npm (global installation)
-npm install -g @lsendel/spec-kit-mcp
-
-# Or via cargo (Rust installation)
 cargo install spec-kit-mcp
 ```
 
@@ -95,9 +84,33 @@ Then configure `~/.config/claude-code/mcp.json`:
 ```
 
 **Advantages:**
-- ✅ Faster startup (no download)
+- ✅ Fastest startup (<100ms)
 - ✅ Works offline
-- ✅ Version pinned
+- ✅ Most reliable
+- ✅ Supports all platforms (macOS Intel/ARM, Linux)
+
+#### Method 2: Using npx (No Installation)
+
+Create or edit `~/.config/claude-code/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "spec-kit": {
+      "command": "npx",
+      "args": ["-y", "@lsendel/spec-kit-mcp"],
+      "env": {}
+    }
+  }
+}
+```
+
+**Advantages:**
+- ✅ No installation required
+- ✅ Always uses latest version
+- ✅ Good for trying it out
+
+**Note**: First run may be slower as it downloads the binary.
 
 #### Verify Configuration
 

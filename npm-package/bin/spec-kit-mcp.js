@@ -36,10 +36,10 @@ function getBinaryPath() {
 
   // Check multiple possible locations
   const locations = [
-    // Installed as dependency (in node_modules/@speckit/)
+    // Downloaded by postinstall (primary location)
+    path.join(__dirname, binaryName),
+    // Installed as dependency (in node_modules/@lsendel/)
     path.join(__dirname, '..', '..', platformDir, 'bin', binaryName),
-    // Installed globally
-    path.join(__dirname, '..', 'bin', binaryName),
     // Development (built locally)
     path.join(__dirname, '..', '..', 'target', 'release', binaryName),
   ];
@@ -50,11 +50,22 @@ function getBinaryPath() {
     }
   }
 
+  // Try using cargo-installed version from PATH
+  const { execSync } = require('child_process');
+  try {
+    execSync('which spec-kit-mcp', { stdio: 'ignore' });
+    return 'spec-kit-mcp'; // Available in PATH
+  } catch (e) {
+    // Not in PATH
+  }
+
   console.error('Error: spec-kit-mcp binary not found!');
   console.error('Searched locations:');
   locations.forEach(loc => console.error(`  - ${loc}`));
-  console.error('\nPlease ensure the package was installed correctly.');
-  console.error('You may need to run: npm install --force');
+  console.error('\nPlease install using one of these methods:');
+  console.error('  1. cargo install spec-kit-mcp (recommended)');
+  console.error('  2. npm install -g @lsendel/spec-kit-mcp --force');
+  console.error('  3. Build from source: https://github.com/lsendel/spec-kit-mcp');
   process.exit(1);
 }
 
