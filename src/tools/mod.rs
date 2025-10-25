@@ -12,6 +12,7 @@ use crate::mcp::types::{ToolDefinition, ToolResult};
 use crate::speckit::SpecKitCli;
 
 pub mod analyze;
+pub mod check;
 pub mod checklist;
 pub mod clarify;
 pub mod constitution;
@@ -22,6 +23,7 @@ pub mod specify;
 pub mod tasks;
 
 pub use analyze::AnalyzeTool;
+pub use check::CheckTool;
 pub use checklist::ChecklistTool;
 pub use clarify::ClarifyTool;
 pub use constitution::ConstitutionTool;
@@ -103,6 +105,7 @@ pub fn create_registry(cli: SpecKitCli) -> ToolRegistry {
 
     // Register all tools
     registry.register(Arc::new(InitTool::new(cli.clone())));
+    registry.register(Arc::new(CheckTool::new(cli.clone())));
     registry.register(Arc::new(ConstitutionTool::new(cli.clone())));
     registry.register(Arc::new(SpecifyTool::new(cli.clone())));
     registry.register(Arc::new(PlanTool::new(cli.clone())));
