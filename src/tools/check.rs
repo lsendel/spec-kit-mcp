@@ -110,15 +110,21 @@ impl Tool for CheckTool {
         let mut report = String::from("# Tool Installation Check\n\n");
         let mut all_good = true;
 
-        // Check spec-kit CLI
+        // Check spec-kit CLI (via uvx)
         if params.check_speckit {
             report.push_str("## Spec-Kit CLI\n\n");
-            let has_specify = self.check_command("specify").await;
-            if has_specify {
-                report.push_str("✅ `specify` command is available\n");
+
+            // Check for uvx/uv
+            let has_uvx = self.check_command("uvx").await;
+            let has_uv = self.check_command("uv").await;
+
+            if has_uvx || has_uv {
+                report.push_str("✅ `uv`/`uvx` is available\n");
+                report.push_str("✅ Spec-kit can be run via: `uvx --from git+https://github.com/github/spec-kit.git specify`\n");
             } else {
-                report.push_str("❌ `specify` command not found\n");
-                report.push_str("   Install with: `uv tool install specify-cli`\n");
+                report.push_str("❌ `uv`/`uvx` not found\n");
+                report.push_str("   Install uv from: https://docs.astral.sh/uv/\n");
+                report.push_str("   Or via pip: `pip install uv`\n");
                 all_good = false;
             }
             report.push('\n');

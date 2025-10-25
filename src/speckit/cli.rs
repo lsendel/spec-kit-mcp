@@ -64,7 +64,7 @@ impl SpecKitCli {
     /// Create a new spec-kit CLI interface
     pub fn new() -> Self {
         Self {
-            cli_path: "specify".to_string(),
+            cli_path: "uvx".to_string(),
             python_path: "python3".to_string(),
             timeout_seconds: 300, // 5 minutes
             test_mode: false,
@@ -94,14 +94,35 @@ impl SpecKitCli {
         self
     }
 
-    /// Check if spec-kit is installed
+    /// Check if spec-kit is installed (via uvx)
     pub async fn is_installed(&self) -> bool {
         if self.test_mode {
             return true;
         }
 
-        Command::new(&self.cli_path)
+        // Check if uvx is available
+        let uvx_available = Command::new(&self.cli_path)
             .arg("--version")
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .status()
+            .await
+            .map(|s| s.success())
+            .unwrap_or(false);
+
+        if !uvx_available {
+            tracing::warn!("uvx command not found - spec-kit requires uv/uvx");
+            return false;
+        }
+
+        // Check if we can run spec-kit via uvx
+        Command::new(&self.cli_path)
+            .args(&[
+                "--from",
+                "git+https://github.com/github/spec-kit.git",
+                "specify",
+                "--help",
+            ])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .status()
@@ -120,14 +141,22 @@ impl SpecKitCli {
             });
         }
 
+        // Build the full command with uvx + spec-kit repo + specify + args
+        let mut full_args = vec![
+            "--from",
+            "git+https://github.com/github/spec-kit.git",
+            "specify",
+        ];
+        full_args.extend_from_slice(args);
+
         tracing::debug!(
             command = %self.cli_path,
-            args = ?args,
-            "Executing spec-kit command"
+            args = ?full_args,
+            "Executing spec-kit command via uvx"
         );
 
         let command_future = Command::new(&self.cli_path)
-            .args(args)
+            .args(&full_args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .output();

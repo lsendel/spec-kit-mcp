@@ -17,6 +17,24 @@ Complete configuration guide for using Spec-Kit MCP with different AI coding ass
 
 Claude Code has built-in MCP support and automatically detects MCP servers.
 
+### Prerequisites
+
+Before setting up the MCP server, ensure you have:
+
+- **Python 3.11+**: Required by GitHub spec-kit
+- **uv package manager**: Install from https://docs.astral.sh/uv/
+- **Git**: For version control operations
+
+**Verify Prerequisites**:
+```bash
+python3 --version  # Should be 3.11 or higher
+uv --version       # Should be installed
+git --version      # Should be installed
+
+# Test spec-kit access
+uvx --from git+https://github.com/github/spec-kit.git specify check
+```
+
 ### Setup Steps
 
 1. **Install spec-kit-mcp**:

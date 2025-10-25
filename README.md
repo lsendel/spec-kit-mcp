@@ -54,9 +54,13 @@ npx @lsendel/spec-kit-mcp
 
 ### Prerequisites
 
-- **Spec-Kit CLI**: Install with `uv tool install specify-cli` or `pip install specify-cli`
-- **Python 3.11+**: Required by spec-kit
-- **Node.js 18+**: Only if using npx
+- **Python 3.11+**: Required by GitHub spec-kit
+- **uv package manager**: Required to run spec-kit (install from https://docs.astral.sh/uv/)
+- **GitHub Spec-Kit**: No separate installation needed - the MCP server uses `uvx` to run spec-kit directly
+- **Node.js 18+**: Only if using npx installation method
+- **Git**: For version control operations
+
+**Note**: The spec-kit CLI is not available on PyPI. The MCP server automatically runs it via `uvx --from git+https://github.com/github/spec-kit.git`
 
 ### Configuration with Claude Code
 
@@ -485,18 +489,25 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ```
 Error: spec-kit CLI not found!
-Please install it with: uv tool install specify-cli
 ```
 
-**Solution**: Install spec-kit CLI:
+**Solution**: Ensure uv package manager is installed:
 
 ```bash
-# Using uv (recommended)
-uv tool install specify-cli
+# Check if uv is installed
+uv --version
+
+# If not installed, install uv (macOS/Linux)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Or using pip
-pip install specify-cli
+pip install uv
+
+# Test spec-kit access
+uvx --from git+https://github.com/github/spec-kit.git specify check
 ```
+
+**Note**: The spec-kit CLI is not available as a standalone package. The MCP server uses `uvx` to run it directly from GitHub.
 
 ### Python Version Too Old
 
