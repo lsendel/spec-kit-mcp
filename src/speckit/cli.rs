@@ -45,7 +45,8 @@ pub struct SpecKitCli {
     /// Path to the specify command
     cli_path: String,
 
-    /// Path to Python interpreter
+    /// Path to Python interpreter (reserved for future use)
+    #[allow(dead_code)]
     python_path: String,
 
     /// Default timeout for commands (in seconds)

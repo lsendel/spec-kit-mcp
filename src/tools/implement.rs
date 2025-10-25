@@ -33,6 +33,7 @@ fn default_output_dir() -> PathBuf {
 
 /// Tool for executing implementation
 pub struct ImplementTool {
+    #[allow(dead_code)]
     cli: SpecKitCli,
 }
 

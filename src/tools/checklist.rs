@@ -41,6 +41,7 @@ fn default_checklist_path() -> PathBuf {
 
 /// Tool for generating validation checklists
 pub struct ChecklistTool {
+    #[allow(dead_code)]
     cli: SpecKitCli,
 }
 

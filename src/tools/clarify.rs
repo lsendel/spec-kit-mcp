@@ -33,6 +33,7 @@ fn default_clarify_path() -> PathBuf {
 
 /// Tool for clarifying specifications
 pub struct ClarifyTool {
+    #[allow(dead_code)]
     cli: SpecKitCli,
 }
 

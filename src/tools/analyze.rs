@@ -41,6 +41,7 @@ fn default_analyze_path() -> PathBuf {
 
 /// Tool for analyzing spec-kit artifacts
 pub struct AnalyzeTool {
+    #[allow(dead_code)]
     cli: SpecKitCli,
 }
 
