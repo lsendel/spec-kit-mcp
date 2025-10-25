@@ -1,0 +1,49 @@
+{
+  "name": "@speckit/mcp",
+  "version": "0.1.0",
+  "description": "MCP server for GitHub Spec-Kit - enables AI coding assistants to use spec-driven development",
+  "main": "bin/spec-kit-mcp.js",
+  "bin": {
+    "spec-kit-mcp": "bin/spec-kit-mcp.js"
+  },
+  "scripts": {
+    "postinstall": "node lib/download-binary.js",
+    "test": "node bin/spec-kit-mcp.js --help"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/spec-kit-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "spec-kit",
+    "ai",
+    "specification",
+    "development",
+    "claude",
+    "cursor",
+    "copilot"
+  ],
+  "author": "Spec-Kit MCP Contributors",
+  "license": "(MIT OR Apache-2.0)",
+  "bugs": {
+    "url": "https://github.com/yourusername/spec-kit-mcp/issues"
+  },
+  "homepage": "https://github.com/yourusername/spec-kit-mcp#readme",
+  "files": [
+    "bin/",
+    "lib/",
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "optionalDependencies": {
+    "@speckit/mcp-darwin-arm64": "0.1.0",
+    "@speckit/mcp-darwin-x64": "0.1.0",
+    "@speckit/mcp-linux-x64": "0.1.0",
+    "@speckit/mcp-win32-x64": "0.1.0"
+  }
+}

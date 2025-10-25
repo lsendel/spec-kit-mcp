@@ -1,0 +1,76 @@
+[package]
+name = "spec-kit-mcp"
+version = "0.1.0"
+edition = "2021"
+authors = ["Spec-Kit MCP Contributors"]
+description = "MCP server for GitHub Spec-Kit - enables AI coding assistants to use spec-driven development"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/spec-kit-mcp"
+documentation = "https://docs.rs/spec-kit-mcp"
+homepage = "https://github.com/yourusername/spec-kit-mcp"
+readme = "README.md"
+keywords = ["mcp", "spec-kit", "ai", "specification", "development"]
+categories = ["command-line-utilities", "development-tools"]
+rust-version = "1.70"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[[bin]]
+name = "spec-kit-mcp"
+path = "src/main.rs"
+
+[lib]
+name = "spec_kit_mcp"
+path = "src/lib.rs"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "2.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Process execution
+async-process = "2.0"
+
+# File operations
+tokio-fs = "0.1"
+
+# Configuration
+config = "0.14"
+toml = "0.8"
+
+# CLI argument parsing (for binary)
+clap = { version = "4.5", features = ["derive"] }
+
+# Path utilities
+dirs = "5.0"
+
+# Async traits
+async-trait = "0.1"
+
+[dev-dependencies]
+# Testing
+mockall = "0.12"
+tempfile = "3.8"
+criterion = "0.5"
+
+# Test utilities
+tokio-test = "0.4"
+assert_matches = "1.5"
+
+# Benchmarks will be added later
+# [[bench]]
+# name = "mcp_benchmarks"
+# harness = false

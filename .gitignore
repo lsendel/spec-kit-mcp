@@ -1,0 +1,36 @@
+# Rust
+/target
+Cargo.lock
+**/*.rs.bk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+*.profraw
+*.profdata
+
+# Logs
+*.log
+
+# Config
+.env
+config.local.toml
+
+# Build artifacts
+dist/
+build/
+
+# NPM
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
