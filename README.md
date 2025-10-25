@@ -8,12 +8,14 @@
 
 ## Features
 
-- **🎯 Complete Spec-Kit Workflow**: All 5 core tools for spec-driven development
+- **🎯 100% Spec-Kit Coverage**: All 10 tools for complete spec-driven development
 - **🚀 MCP Protocol**: Full JSON-RPC 2.0 implementation for AI agents
 - **⚡ High Performance**: Built with Rust and Tokio for async I/O
 - **🔧 Dual Installation**: Install via `cargo` or `npx`
 - **🛡️ Type Safe**: Comprehensive type system with validation
-- **📝 Well Documented**: Extensive API documentation and examples
+- **📚 Comprehensive Docs**: Tutorials, examples, and configuration guides
+- **🌐 Multi-Editor Support**: Claude Code, Cursor, Windsurf, VS Code, and more
+- **🧪 Production Ready**: Tested, documented, and deployed
 
 ## Quick Start
 
@@ -42,30 +44,48 @@ cargo install spec-kit-mcp
 - **Python 3.11+**: Required by spec-kit
 - **Node.js 18+**: Only if using npx
 
-### Configuration
+### Configuration with Claude Code
 
-Add to your Claude Code `.mcp.json`:
+Claude Code supports two ways to configure MCP servers:
+
+#### Method 1: Using npx (Recommended - No Installation Needed)
+
+Create or edit `~/.config/claude-code/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "spec-kit": {
-      "type": "stdio",
       "command": "npx",
-      "args": ["@speckit/mcp@latest"],
+      "args": ["-y", "@lsendel/spec-kit-mcp"],
       "env": {}
     }
   }
 }
 ```
 
-Or if installed via cargo:
+**Advantages:**
+- ✅ No installation required
+- ✅ Always uses latest version
+- ✅ Works immediately after config
+
+#### Method 2: Using Installed Binary
+
+First install the package:
+```bash
+# Via npm (global installation)
+npm install -g @lsendel/spec-kit-mcp
+
+# Or via cargo (Rust installation)
+cargo install spec-kit-mcp
+```
+
+Then configure `~/.config/claude-code/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "spec-kit": {
-      "type": "stdio",
       "command": "spec-kit-mcp",
       "args": [],
       "env": {}
@@ -74,9 +94,83 @@ Or if installed via cargo:
 }
 ```
 
+**Advantages:**
+- ✅ Faster startup (no download)
+- ✅ Works offline
+- ✅ Version pinned
+
+#### Verify Configuration
+
+1. **Restart Claude Code** after editing the config file
+
+2. **Test the MCP tools** in Claude Code:
+```
+List all available MCP tools
+```
+
+You should see 10 spec-kit tools listed:
+- speckit_init
+- speckit_check
+- speckit_constitution
+- speckit_specify
+- speckit_plan
+- speckit_tasks
+- speckit_implement
+- speckit_clarify
+- speckit_analyze
+- speckit_checklist
+
+3. **Try a simple command**:
+```
+Use speckit_check to verify my development environment
+```
+
+#### Troubleshooting Configuration
+
+**Issue**: Tools not appearing after restart
+
+**Solution**:
+1. Check config file location: `cat ~/.config/claude-code/mcp.json`
+2. Verify JSON syntax: `cat ~/.config/claude-code/mcp.json | jq`
+3. Check Claude Code logs: `~/.config/claude-code/logs/`
+4. For npx method, ensure Node.js is installed: `node --version`
+5. For binary method, verify installation: `which spec-kit-mcp`
+
+**Issue**: `spec-kit-mcp: command not found` (Method 2)
+
+**Solution**:
+- Use Method 1 (npx) instead, or
+- Add npm global bin to PATH: `export PATH="$PATH:$(npm config get prefix)/bin"`
+
+> **Need help with other editors?** See the [Complete Configuration Guide](./docs/CONFIGURATION.md) for Cursor, Windsurf, VS Code, and more.
+
+## 📚 Documentation
+
+### Quick Links
+
+- **[📖 Comprehensive Tutorials](./TUTORIALS.md)** - Step-by-step guides for all skill levels
+- **[💡 Examples](./examples/)** - Real-world project examples
+- **[⚙️ Configuration Guide](./docs/CONFIGURATION.md)** - Setup for different AI assistants
+- **[🚀 Usage Guide](./USAGE_GUIDE.md)** - Detailed usage documentation
+
+### Learning Resources
+
+**New to Spec-Kit?** Start here:
+1. [Tutorial 1: Your First Spec-Kit Project](./TUTORIALS.md#tutorial-1-your-first-spec-kit-project) (20 min)
+2. [Todo CLI Example](./examples/todo-cli/) - Complete beginner example
+3. [Configuration for Your Editor](./docs/CONFIGURATION.md)
+
+**Building APIs?** Check out:
+- [Tutorial 2: Building a REST API](./TUTORIALS.md#tutorial-2-building-a-rest-api-with-spec-kit)
+- [Blog API Example](./examples/blog-api/) - Production-ready API example
+
+**Working with teams?**
+- [Tutorial 4: Team Collaboration](./TUTORIALS.md#tutorial-4-team-collaboration-with-spec-kit)
+- [CI/CD Integration](./TUTORIALS.md#tutorial-5-integrating-with-cicd)
+
 ## Available Tools
 
-The MCP server exposes 5 spec-kit tools for the complete workflow:
+The MCP server exposes 10 spec-kit tools for the complete workflow:
 
 ### 1. `speckit_init`
 
@@ -136,6 +230,67 @@ Generate actionable task lists from the plan.
   "output_path": "./speckit.tasks"
 }
 ```
+
+### 6. `speckit_implement`
+
+Execute implementation according to the task list.
+
+```json
+{
+  "task_file": "./speckit.tasks",
+  "context": "Using Rust with async/await",
+  "output_dir": "./src"
+}
+```
+
+### 7. `speckit_clarify`
+
+Request clarification on ambiguous requirements or specifications.
+
+```json
+{
+  "spec_file": "./speckit.specify",
+  "questions": "How should we handle edge cases?"
+}
+```
+
+### 8. `speckit_analyze`
+
+Analyze code for quality, compliance, and technical debt.
+
+```json
+{
+  "target_path": "./src",
+  "check_constitution": true,
+  "output_format": "markdown"
+}
+```
+
+### 9. `speckit_check`
+
+Validate that required tools are installed for spec-kit development.
+
+```json
+{
+  "check_speckit": true,
+  "check_git": true,
+  "check_ai_tools": true
+}
+```
+
+### 10. `speckit_checklist`
+
+Generate review checklists to verify implementation completeness.
+
+```json
+{
+  "spec_file": "./speckit.specify",
+  "task_file": "./speckit.tasks",
+  "output_path": "./checklist.md"
+}
+```
+
+> **See all tools in action**: Check out the [Examples](./examples/) directory for complete workflows
 
 ## Usage Example
 
@@ -263,24 +418,31 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 ## Roadmap
 
 ### Current Version (0.1.0)
-- ✅ Core 5 tools implemented
-- ✅ MCP protocol support
+- ✅ All 10 spec-kit tools implemented (100% coverage)
+- ✅ MCP protocol support (JSON-RPC 2.0)
 - ✅ Dual distribution (cargo + npx)
 - ✅ Comprehensive error handling
+- ✅ Complete tutorials and examples
+- ✅ Configuration guides for major editors
+- ✅ Published to crates.io and npm
 
 ### Future Versions
 
 #### v0.2.0
-- [ ] Additional tools: `speckit_implement`, `speckit_clarify`, `speckit_analyze`, `speckit_checklist`
-- [ ] Configuration file support
-- [ ] Enhanced logging and debugging
-- [ ] Performance optimizations
+- [ ] Enhanced tool parameters and validation
+- [ ] Configuration file support (.speckit-mcp.toml)
+- [ ] Template system for common project types
+- [ ] Performance optimizations and caching
+- [ ] Windows platform support
+- [ ] Web-based tool output visualization
 
 #### v0.3.0
-- [ ] Remote MCP via SSE
-- [ ] Web UI for visualization
-- [ ] Template marketplace
-- [ ] Team collaboration features
+- [ ] Remote MCP via Server-Sent Events (SSE)
+- [ ] Web UI dashboard for project visualization
+- [ ] Template marketplace integration
+- [ ] Team collaboration features (shared constitutions)
+- [ ] Metrics and analytics dashboard
+- [ ] Plugin system for custom tools
 
 ## Performance
 

@@ -1,5 +1,5 @@
 {
-  "name": "@speckit/mcp",
+  "name": "@lsendel/spec-kit-mcp",
   "version": "0.1.0",
   "description": "MCP server for GitHub Spec-Kit - enables AI coding assistants to use spec-driven development",
   "main": "bin/spec-kit-mcp.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/spec-kit-mcp.git"
+    "url": "git+https://github.com/lsendel/spec-kit-mcp.git"
   },
   "keywords": [
     "mcp",
@@ -27,9 +27,9 @@
   "author": "Spec-Kit MCP Contributors",
   "license": "(MIT OR Apache-2.0)",
   "bugs": {
-    "url": "https://github.com/yourusername/spec-kit-mcp/issues"
+    "url": "https://github.com/lsendel/spec-kit-mcp/issues"
   },
-  "homepage": "https://github.com/yourusername/spec-kit-mcp#readme",
+  "homepage": "https://github.com/lsendel/spec-kit-mcp#readme",
   "files": [
     "bin/",
     "lib/",
