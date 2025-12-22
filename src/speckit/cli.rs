@@ -103,11 +103,11 @@ impl SpecKitCli {
         // Check if uvx is available
         let uvx_available = Command::new(&self.cli_path)
             .arg("--version")
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
-            .status()
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .output()
             .await
-            .map(|s| s.success())
+            .map(|output| output.status.success())
             .unwrap_or(false);
 
         if !uvx_available {
@@ -123,11 +123,11 @@ impl SpecKitCli {
                 "specify",
                 "--help",
             ])
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
-            .status()
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .output()
             .await
-            .map(|s| s.success())
+            .map(|output| output.status.success())
             .unwrap_or(false)
     }
 
