@@ -46,10 +46,15 @@ function getBinaryPath() {
     if (fs.existsSync(location)) return location;
   }
 
-  try {
-    require('child_process').execSync('which spec-kit-mcp', { stdio: 'ignore' });
-    return 'spec-kit-mcp';
-  } catch (e) { /* not in PATH */ }
+  // Check PATH for a cargo-installed binary (Unix only — no native
+  // binary has been published for Windows).
+  if (process.platform !== 'win32') {
+    try {
+      const { execSync } = require('child_process');
+      execSync('command -v spec-kit-mcp', { stdio: 'ignore' });
+      return 'spec-kit-mcp';
+    } catch (e) { /* not in PATH */ }
+  }
 
   return null;
 }

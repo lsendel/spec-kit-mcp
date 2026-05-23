@@ -1,5 +1,5 @@
 {
-  "name": "@jnko91/spec-kit-mcp",
+  "name": "@lsendel/spec-kit-mcp",
   "version": "0.2.0",
   "description": "MCP server for GitHub Spec-Kit — spec-driven development for AI coding assistants. Windows supported via pure Node.js fallback.",
   "main": "bin/spec-kit-mcp.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jecartechnologys-web/spec-kit-mcp-windows.git"
+    "url": "git+https://github.com/lsendel/spec-kit-mcp.git"
   },
   "keywords": [
     "mcp",
@@ -25,12 +25,12 @@
     "copilot",
     "windows"
   ],
-  "author": "jnko91 & Spec-Kit MCP Contributors",
+  "author": "Spec-Kit MCP Contributors",
   "license": "(MIT OR Apache-2.0)",
   "bugs": {
-    "url": "https://github.com/jecartechnologys-web/spec-kit-mcp-windows/issues"
+    "url": "https://github.com/lsendel/spec-kit-mcp/issues"
   },
-  "homepage": "https://github.com/jecartechnologys-web/spec-kit-mcp-windows#readme",
+  "homepage": "https://github.com/lsendel/spec-kit-mcp#readme",
   "files": [
     "bin/",
     "lib/",

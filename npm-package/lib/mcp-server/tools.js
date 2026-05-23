@@ -17,13 +17,17 @@ const SPEC_KIT_REPO = 'git+https://github.com/github/spec-kit.git';
 /**
  * Run a uvx command with argv array (no shell, no injection).
  * Throws on non-zero exit so the MCP handler correctly sets isError: true.
+ * @param {string[]} argv  - arguments after 'uvx --from <repo>'
+ * @param {number}   timeoutMs
+ * @param {object}   [opts] - extra spawn options (e.g. cwd)
  */
-function runUvx(argv, timeoutMs = 120000) {
+function runUvx(argv, timeoutMs = 120000, opts = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn('uvx', ['--from', SPEC_KIT_REPO, ...argv], {
       timeout: timeoutMs,
       stdio: ['ignore', 'pipe', 'pipe'],
       windowsHide: true,
+      ...opts,
     });
 
     let stdout = '';
@@ -73,10 +77,17 @@ function checkCommand(cmd, args, timeoutMs = 10000) {
 async function handleSpeckitCheck(args = {}) {
   const results = [];
 
-  try {
-    await checkCommand('python', ['--version']);
-    results.push('✓ Python installed');
-  } catch {
+  // Python may be 'python', 'python3', or 'py' (Windows launcher)
+  let pythonOk = false;
+  for (const py of ['python', 'python3', 'py']) {
+    try {
+      await checkCommand(py, ['--version']);
+      results.push(`✓ Python installed (${py})`);
+      pythonOk = true;
+      break;
+    } catch { /* try next */ }
+  }
+  if (!pythonOk) {
     results.push('✗ Python NOT installed (required: 3.11+)');
   }
 
@@ -114,17 +125,22 @@ async function handleSpeckitInit(args = {}) {
   const { project_name, project_path, integration } = args;
   if (!project_name) throw new Error('project_name is required');
 
-  // Use --here for current directory, positional <project_name> otherwise.
-  // There is no --dir flag in spec-kit init.
+  // Build argv: specify init [<project_name> | --here]
   const argv = ['specify', 'init'];
-  if (project_path === '.' || project_path === './') {
+  if (!project_path || project_path === '.' || project_path === './') {
     argv.push('--here');
   } else {
     argv.push(project_name);
   }
   if (integration) argv.push('--integration', integration);
 
-  return await runUvx(argv);
+  // Run with cwd set to project_path when provided (and not ".")
+  const opts = {};
+  if (project_path && project_path !== '.' && project_path !== './') {
+    opts.cwd = project_path;
+  }
+
+  return await runUvx(argv, 120000, opts);
 }
 
 // ── speckit_constitution ───────────────────────────────────────

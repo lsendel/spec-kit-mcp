@@ -39,7 +39,6 @@ const toolRegistry = [
       properties: {
         check_speckit: { type: 'boolean', description: 'Check if spec-kit/speckit CLI is available' },
         check_git: { type: 'boolean', description: 'Check if git is installed' },
-        check_ai_tools: { type: 'boolean', description: 'Check if AI coding tools are installed' },
       },
     },
     handler: tools.handleSpeckitCheck,
