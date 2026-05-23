@@ -1,5 +1,5 @@
 {
-  "name": "@lsendel/spec-kit-mcp",
+  "name": "@jnko91/spec-kit-mcp",
   "version": "0.2.0",
   "description": "MCP server for GitHub Spec-Kit — spec-driven development for AI coding assistants. Windows supported via pure Node.js fallback.",
   "main": "bin/spec-kit-mcp.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lsendel/spec-kit-mcp.git"
+    "url": "git+https://github.com/jecartechnologys-web/spec-kit-mcp-windows.git"
   },
   "keywords": [
     "mcp",
@@ -25,12 +25,12 @@
     "copilot",
     "windows"
   ],
-  "author": "Spec-Kit MCP Contributors",
+  "author": "jnko91 & Spec-Kit MCP Contributors",
   "license": "(MIT OR Apache-2.0)",
   "bugs": {
-    "url": "https://github.com/lsendel/spec-kit-mcp/issues"
+    "url": "https://github.com/jecartechnologys-web/spec-kit-mcp-windows/issues"
   },
-  "homepage": "https://github.com/lsendel/spec-kit-mcp#readme",
+  "homepage": "https://github.com/jecartechnologys-web/spec-kit-mcp-windows#readme",
   "files": [
     "bin/",
     "lib/",
@@ -43,10 +43,5 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
-  },
-  "optionalDependencies": {
-    "@speckit/mcp-darwin-arm64": "0.1.0",
-    "@speckit/mcp-darwin-x64": "0.1.0",
-    "@speckit/mcp-linux-x64": "0.1.0"
   }
 }
