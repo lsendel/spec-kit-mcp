@@ -1,7 +1,7 @@
 {
   "name": "@lsendel/spec-kit-mcp",
-  "version": "0.1.1",
-  "description": "MCP server for GitHub Spec-Kit - enables AI coding assistants to use spec-driven development",
+  "version": "0.2.0",
+  "description": "MCP server for GitHub Spec-Kit — spec-driven development for AI coding assistants. Windows supported via pure Node.js fallback.",
   "main": "bin/spec-kit-mcp.js",
   "bin": {
     "spec-kit-mcp": "bin/spec-kit-mcp.js"
@@ -22,7 +22,8 @@
     "development",
     "claude",
     "cursor",
-    "copilot"
+    "copilot",
+    "windows"
   ],
   "author": "Spec-Kit MCP Contributors",
   "license": "(MIT OR Apache-2.0)",
@@ -40,10 +41,7 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "optionalDependencies": {
-    "@speckit/mcp-darwin-arm64": "0.1.0",
-    "@speckit/mcp-darwin-x64": "0.1.0",
-    "@speckit/mcp-linux-x64": "0.1.0",
-    "@speckit/mcp-win32-x64": "0.1.0"
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
   }
 }
