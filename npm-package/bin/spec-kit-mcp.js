@@ -3,14 +3,17 @@
 /**
  * Spec-Kit MCP Server Entry Point
  *
- * This script launches the spec-kit-mcp binary for the current platform.
+ * On macOS/Linux: launches the native Rust binary (fast, <100ms cold start).
+ * On Windows or when no binary is found: falls back to the pure Node.js
+ * implementation — same 10 tools, no compilation required.
  */
 
 const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-// Determine the binary path based on platform and architecture
+// Determine the binary path based on platform and architecture.
+// Returns `null` when the native binary is not available.
 function getBinaryPath() {
   const platform = process.platform;
   const arch = process.arch;
@@ -30,73 +33,44 @@ function getBinaryPath() {
   } else if (platform === 'linux') {
     platformDir = `mcp-linux-${arch}`;
   } else {
-    console.error(`Unsupported platform: ${platform}`);
-    process.exit(1);
+    return null; // fallback to Node.js
   }
 
-  // Check multiple possible locations
   const locations = [
-    // Downloaded by postinstall (primary location)
     path.join(__dirname, binaryName),
-    // Installed as dependency (in node_modules/@lsendel/)
     path.join(__dirname, '..', '..', platformDir, 'bin', binaryName),
-    // Development (built locally)
     path.join(__dirname, '..', '..', 'target', 'release', binaryName),
   ];
 
   for (const location of locations) {
-    if (fs.existsSync(location)) {
-      return location;
-    }
+    if (fs.existsSync(location)) return location;
   }
 
-  // Try using cargo-installed version from PATH
-  const { execSync } = require('child_process');
   try {
-    execSync('which spec-kit-mcp', { stdio: 'ignore' });
-    return 'spec-kit-mcp'; // Available in PATH
-  } catch (e) {
-    // Not in PATH
-  }
+    require('child_process').execSync('which spec-kit-mcp', { stdio: 'ignore' });
+    return 'spec-kit-mcp';
+  } catch (e) { /* not in PATH */ }
 
-  console.error('Error: spec-kit-mcp binary not found!');
-  console.error('Searched locations:');
-  locations.forEach(loc => console.error(`  - ${loc}`));
-  console.error('\nPlease install using one of these methods:');
-  console.error('  1. cargo install spec-kit-mcp (recommended)');
-  console.error('  2. npm install -g @lsendel/spec-kit-mcp --force');
-  console.error('  3. Build from source: https://github.com/lsendel/spec-kit-mcp');
-  process.exit(1);
+  return null;
 }
 
-// Get the binary path
 const binaryPath = getBinaryPath();
 
-// Forward all arguments to the binary
-const args = process.argv.slice(2);
+if (binaryPath) {
+  // ── Native binary mode (macOS / Linux) ──
+  const args = process.argv.slice(2);
+  const child = spawn(binaryPath, args, { stdio: 'inherit', shell: false });
 
-// Spawn the binary
-const child = spawn(binaryPath, args, {
-  stdio: 'inherit',
-  shell: false,
-});
+  child.on('exit', (code) => process.exit(code || 0));
+  child.on('error', (err) => {
+    process.stderr.write(`Failed to start spec-kit-mcp binary: ${err.message}\n`);
+    process.exit(1);
+  });
 
-// Forward exit code
-child.on('exit', (code) => {
-  process.exit(code || 0);
-});
-
-// Handle errors
-child.on('error', (err) => {
-  console.error('Failed to start spec-kit-mcp:', err.message);
-  process.exit(1);
-});
-
-// Handle signals
-process.on('SIGINT', () => {
-  child.kill('SIGINT');
-});
-
-process.on('SIGTERM', () => {
-  child.kill('SIGTERM');
-});
+  process.on('SIGINT', () => child.kill('SIGINT'));
+  process.on('SIGTERM', () => child.kill('SIGTERM'));
+} else {
+  // ── Node.js fallback (Windows or no binary) ──
+  process.stderr.write('spec-kit-mcp [node] starting…\n');
+  require(path.join(__dirname, '..', 'lib', 'mcp-server', 'index.js'));
+}
